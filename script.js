@@ -62,7 +62,7 @@ function updateThemeButton() {
   );
 
   if (themeLabel) {
-    themeLabel.textContent = darkMode ? 'روز' : 'شب';
+    themeLabel.textContent = darkMode ? 'روز' :  شب';
   }
 }
 
