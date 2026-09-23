@@ -19,18 +19,31 @@
       <span>TAISELY</span>
     </a>
 
-    <button
-      class="menu-toggle"
-      aria-label="باز کردن منو"
-      aria-expanded="false"
-      aria-controls="main-menu"
-    >
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
+    <div class="header-actions">
 
-    <nav id="main-menu" class="main-nav">
+      <button
+        class="theme-toggle"
+        type="button"
+        aria-label="تغییر حالت نمایش"
+        title="حالت شب"
+      >
+        شب
+      </button>
+
+      <button
+        class="menu-toggle"
+        aria-label="باز کردن منو"
+        aria-expanded="false"
+        aria-controls="main-menu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+    </div>
+
+    <nav id="main-menu" class="main-nav" aria-label="منوی اصلی">
       <a href="index.html">خانه</a>
       <a href="about.html">درباره ما</a>
       <a href="blog.html">وبلاگ</a>
@@ -45,11 +58,15 @@
 
   <section class="page-hero">
     <div class="container narrow">
+
       <p class="eyebrow">GET IN TOUCH</p>
+
       <h1>با TAISELY در ارتباط باش.</h1>
+
       <p>
         برای پیشنهاد موضوع، همکاری یا بازخورد از راه‌های زیر استفاده کن.
       </p>
+
     </div>
   </section>
 
@@ -58,8 +75,12 @@
 
       <div class="contact-card">
         <span class="feature-index">01</span>
+
         <h2>Telegram</h2>
-        <p>برای انتشار مطالب بلندتر و ارتباط مستقیم.</p>
+
+        <p>
+          برای انتشار مطالب بلندتر و ارتباط مستقیم.
+        </p>
 
         <a
           class="btn btn-primary"
@@ -73,8 +94,12 @@
 
       <div class="contact-card">
         <span class="feature-index">02</span>
+
         <h2>Instagram</h2>
-        <p>برای پست‌ها و معرفی‌های کوتاه.</p>
+
+        <p>
+          برای پست‌ها و معرفی‌های کوتاه.
+        </p>
 
         <a
           class="btn btn-primary"
@@ -88,8 +113,12 @@
 
       <div class="contact-card">
         <span class="feature-index">03</span>
+
         <h2>Email</h2>
-        <p>ایمیل واقعی پروژه را بعداً اینجا اضافه کن.</p>
+
+        <p>
+          ایمیل واقعی پروژه را بعداً اینجا اضافه کن.
+        </p>
 
         <a
           class="btn btn-ghost"
@@ -105,13 +134,47 @@
 </main>
 
 <footer class="site-footer">
-  <div class="container footer-bottom standalone">
-    <span>© 2026 TAISELY</span>
-    <a href="index.html">بازگشت به خانه ←</a>
+
+  <div class="container footer-grid">
+
+    <div>
+      <div class="footer-brand">TAISELY</div>
+      <p>
+        فناوری، هوش مصنوعی و آینده؛ ساده، روشن و کنجکاوانه.
+      </p>
+    </div>
+
+    <div>
+      <h4>صفحات</h4>
+      <a href="index.html">خانه</a>
+      <a href="about.html">درباره ما</a>
+      <a href="blog.html">وبلاگ</a>
+      <a href="products.html">محصولات</a>
+    </div>
+
+    <div>
+      <h4>ارتباط</h4>
+      <a href="https://t.me/TAISELY0" target="_blank" rel="noreferrer">
+        Telegram
+      </a>
+      <a href="https://instagram.com/TAISELY0" target="_blank" rel="noreferrer">
+        Instagram
+      </a>
+      <a href="mailto:hello@taisely.com">
+        Email
+      </a>
+    </div>
+
   </div>
+
+  <div class="container footer-bottom">
+    <span>© 2026 TAISELY</span>
+    <span>Made for curious minds.</span>
+  </div>
+
 </footer>
 
 <script src="script.js"></script>
 
 </body>
-        </html>
+</html>
