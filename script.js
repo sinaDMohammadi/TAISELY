@@ -6,7 +6,16 @@ const menuButton = document.querySelector('.menu-toggle');
 const nav = document.querySelector('.main-nav');
 
 if (menuButton && nav) {
-  menuButton.addEventListener('click', () => {
+
+  /* تابع مرکزی برای بستن منو */
+  function closeMenu() {
+    nav.classList.remove('open');
+    menuButton.setAttribute('aria-expanded', 'false');
+    menuButton.setAttribute('aria-label', 'باز کردن منو');
+  }
+
+  /* تابع مرکزی برای باز/بسته کردن */
+  function toggleMenu() {
     const open = nav.classList.toggle('open');
 
     menuButton.setAttribute('aria-expanded', String(open));
@@ -14,14 +23,46 @@ if (menuButton && nav) {
       'aria-label',
       open ? 'بستن منو' : 'باز کردن منو'
     );
+  }
+
+  /* کلیک روی دکمه */
+  menuButton.addEventListener('click', (event) => {
+    event.stopPropagation();
+    toggleMenu();
   });
 
+  /* کلیک روی لینک‌های منو → بستن */
   nav.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      nav.classList.remove('open');
-      menuButton.setAttribute('aria-expanded', 'false');
-      menuButton.setAttribute('aria-label', 'باز کردن منو');
-    });
+    link.addEventListener('click', closeMenu);
+  });
+
+  /* کلیک بیرون از منو → بستن */
+  document.addEventListener('click', (event) => {
+    if (!nav.classList.contains('open')) return;
+
+    const clickedInsideNav = nav.contains(event.target);
+    const clickedOnButton = menuButton.contains(event.target);
+
+    if (!clickedInsideNav && !clickedOnButton) {
+      closeMenu();
+    }
+  });
+
+  /* فشردن کلید Escape → بستن */
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && nav.classList.contains('open')) {
+      closeMenu();
+      menuButton.focus();
+    }
+  });
+
+  /* تغییر اندازه به دسکتاپ → بستن منو */
+  const desktopQuery = window.matchMedia('(min-width: 768px)');
+
+  desktopQuery.addEventListener('change', (event) => {
+    if (event.matches && nav.classList.contains('open')) {
+      closeMenu();
+    }
   });
 }
 
@@ -62,7 +103,8 @@ function updateThemeButton() {
   );
 
   if (themeLabel) {
-    themeLabel.textContent = darkMode ? 'روز' :  شب';
+    /* ✅ اصلاح شد: کوتیشن جاافتاده اضافه شد */
+    themeLabel.textContent = darkMode ? 'روز' : 'شب';
   }
 }
 
@@ -97,22 +139,42 @@ if (themeToggle) {
 
 document.querySelectorAll('[data-soon]').forEach(button => {
   button.addEventListener('click', () => {
-    const oldToast = document.querySelector('.toast');
 
-    if (oldToast) {
-      oldToast.remove();
-    }
+    /* حذف Toast قبلی اگر مانده */
+    document.querySelector('.toast')?.remove();
 
     const toast = document.createElement('div');
 
     toast.className = 'toast';
-    toast.textContent = 'این محصول فعلاً در حال آماده‌سازی است.';
+
+    /* ✅ پیام اختصاصی از data-soon، با fallback */
+    toast.textContent =
+      button.dataset.soon?.trim() ||
+      'این محصول فعلاً در حال آماده‌سازی است.';
+
+    /* ✅ نقش دسترس‌پذیری برای screen reader */
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', 'polite');
 
     document.body.appendChild(toast);
 
-    setTimeout(() => {
-      toast.remove();
+    const timer = setTimeout(() => {
+      toast.classList.add('toast--hide');
+
+      toast.addEventListener('transitionend', () => {
+        toast.remove();
+      }, { once: true });
+
+      /* اگر transition اجرا نشد، fallback */
+      setTimeout(() => toast.remove(), 400);
+
     }, 2200);
+
+    /* کلیک روی Toast → حذف فوری */
+    toast.addEventListener('click', () => {
+      clearTimeout(timer);
+      toast.remove();
+    });
   });
 });
 
@@ -178,10 +240,6 @@ function setupCollection(options) {
 
     pagination.innerHTML = '';
 
-    /*
-      اگر فقط یک صفحه وجود دارد،
-      pagination را نشان نمی‌دهیم.
-    */
     if (totalPages <= 1) {
       pagination.hidden = true;
       return;
@@ -255,11 +313,12 @@ function setupCollection(options) {
   }
 
 
+  /* ✅ اصلاح شد: اسکرول به اولین آیتم *قابل‌مشاهده* در صفحه فعلی */
   function scrollToResults() {
-    const firstItem = document.querySelector(itemSelector);
+    const firstVisible = items.find(item => !item.hidden);
 
-    if (firstItem) {
-      firstItem.scrollIntoView({
+    if (firstVisible) {
+      firstVisible.scrollIntoView({
         behavior: 'smooth',
         block: 'start'
       });
