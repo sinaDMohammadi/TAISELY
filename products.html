@@ -19,18 +19,31 @@
       <span>TAISELY</span>
     </a>
 
-    <button
-      class="menu-toggle"
-      aria-label="باز کردن منو"
-      aria-expanded="false"
-      aria-controls="main-menu"
-    >
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
+    <div class="header-actions">
 
-    <nav id="main-menu" class="main-nav">
+      <button
+        class="theme-toggle"
+        type="button"
+        aria-label="تغییر حالت نمایش"
+        title="حالت شب"
+      >
+        شب
+      </button>
+
+      <button
+        class="menu-toggle"
+        aria-label="باز کردن منو"
+        aria-expanded="false"
+        aria-controls="main-menu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+    </div>
+
+    <nav id="main-menu" class="main-nav" aria-label="منوی اصلی">
       <a href="index.html">خانه</a>
       <a href="about.html">درباره ما</a>
       <a href="blog.html">وبلاگ</a>
@@ -45,52 +58,128 @@
 
   <section class="page-hero">
     <div class="container narrow">
+
       <p class="eyebrow">TAISELY PRODUCTS</p>
+
       <h1>محصولات</h1>
+
       <p>
         اینجا قرار است ابزارها و محصولات دیجیتال TAISELY قرار بگیرند.
       </p>
+
     </div>
   </section>
 
   <section class="section">
-    <div class="container product-grid">
+    <div class="container">
 
-      <article class="product-card">
-        <div class="product-icon">01</div>
-        <p class="eyebrow">COMING SOON</p>
-        <h2>TAISELY AI Toolkit</h2>
-        <p>
-          مجموعه‌ای از ابزارها و منابع کاربردی برای کار با هوش مصنوعی.
-        </p>
-        <button class="btn btn-primary" type="button" data-soon>
-          به‌زودی
-        </button>
-      </article>
+      <div class="content-tools">
 
-      <article class="product-card">
-        <div class="product-icon">02</div>
-        <p class="eyebrow">COMING SOON</p>
-        <h2>TAISELY Guides</h2>
-        <p>
-          راهنماهای آموزشی جمع‌وجور برای یادگیری فناوری و ابزارهای جدید.
-        </p>
-        <button class="btn btn-primary" type="button" data-soon>
-          به‌زودی
-        </button>
-      </article>
+        <div class="search-box">
+          <label for="product-search" class="sr-only">
+            جستجو در محصولات
+          </label>
 
-      <article class="product-card">
-        <div class="product-icon">03</div>
-        <p class="eyebrow">COMING SOON</p>
-        <h2>TAISELY Projects</h2>
-        <p>
-          پروژه‌ها و صفحات تعاملی که بخشی از محتوای TAISELY را عملی می‌کنند.
-        </p>
-        <button class="btn btn-primary" type="button" data-soon>
-          به‌زودی
-        </button>
-      </article>
+          <input
+            id="product-search"
+            type="search"
+            placeholder="جستجو در محصولات..."
+            autocomplete="off"
+          >
+
+          <span class="search-icon">⌕</span>
+        </div>
+
+      </div>
+
+      <div class="results-info" id="product-results-info"></div>
+
+      <div class="product-grid" id="product-list">
+
+        <article
+          class="product-card"
+          data-search="taisely ai toolkit ai toolkit هوش مصنوعی ابزار ابزارهای منابع"
+        >
+          <div class="product-icon">01</div>
+
+          <p class="eyebrow">COMING SOON</p>
+
+          <h2>TAISELY AI Toolkit</h2>
+
+          <p>
+            مجموعه‌ای از ابزارها و منابع کاربردی برای کار با هوش مصنوعی.
+          </p>
+
+          <button
+            class="btn btn-primary"
+            type="button"
+            data-soon
+          >
+            به‌زودی
+          </button>
+        </article>
+
+        <article
+          class="product-card"
+          data-search="taisely guides guides راهنما آموزش فناوری ابزارهای جدید"
+        >
+          <div class="product-icon">02</div>
+
+          <p class="eyebrow">COMING SOON</p>
+
+          <h2>TAISELY Guides</h2>
+
+          <p>
+            راهنماهای آموزشی جمع‌وجور برای یادگیری فناوری و ابزارهای جدید.
+          </p>
+
+          <button
+            class="btn btn-primary"
+            type="button"
+            data-soon
+          >
+            به‌زودی
+          </button>
+        </article>
+
+        <article
+          class="product-card"
+          data-search="taisely projects projects پروژه صفحات تعاملی فناوری"
+        >
+          <div class="product-icon">03</div>
+
+          <p class="eyebrow">COMING SOON</p>
+
+          <h2>TAISELY Projects</h2>
+
+          <p>
+            پروژه‌ها و صفحات تعاملی که بخشی از محتوای TAISELY را عملی می‌کنند.
+          </p>
+
+          <button
+            class="btn btn-primary"
+            type="button"
+            data-soon
+          >
+            به‌زودی
+          </button>
+        </article>
+
+      </div>
+
+      <div
+        class="empty-state"
+        id="product-empty"
+        hidden
+      >
+        محصولی با این مشخصات پیدا نشد.
+      </div>
+
+      <div
+        class="pagination"
+        id="product-pagination"
+        aria-label="صفحه‌بندی محصولات"
+      ></div>
 
     </div>
   </section>
@@ -98,10 +187,42 @@
 </main>
 
 <footer class="site-footer">
-  <div class="container footer-bottom standalone">
-    <span>© 2026 TAISELY</span>
-    <a href="index.html">بازگشت به خانه ←</a>
+
+  <div class="container footer-grid">
+
+    <div>
+      <div class="footer-brand">TAISELY</div>
+      <p>
+        فناوری، هوش مصنوعی و آینده؛ ساده، روشن و کنجکاوانه.
+      </p>
+    </div>
+
+    <div>
+      <h4>صفحات</h4>
+      <a href="index.html">خانه</a>
+      <a href="about.html">درباره ما</a>
+      <a href="blog.html">وبلاگ</a>
+      <a href="contact.html">تماس با ما</a>
+    </div>
+
+    <div>
+      <h4>ارتباط</h4>
+      <a href="contact.html">تماس با ما</a>
+      <a href="https://t.me/TAISELY0" target="_blank" rel="noreferrer">
+        Telegram
+      </a>
+      <a href="https://instagram.com/TAISELY0" target="_blank" rel="noreferrer">
+        Instagram
+      </a>
+    </div>
+
   </div>
+
+  <div class="container footer-bottom">
+    <span>© 2026 TAISELY</span>
+    <span>Made for curious minds.</span>
+  </div>
+
 </footer>
 
 <script src="script.js"></script>
