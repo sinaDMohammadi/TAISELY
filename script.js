@@ -1,446 +1,648 @@
-/* =========================
-   Mobile Menu
-========================= */
+/* =========================================
+   MOBILE MENU
+========================================= */
 
-const menuButton = document.querySelector('.menu-toggle');
-const nav = document.querySelector('.main-nav');
+const menuButton = document.querySelector(".menu-toggle");
+const nav = document.querySelector(".main-nav");
 
 if (menuButton && nav) {
 
-  /* تابع مرکزی برای بستن منو */
-  function closeMenu() {
-    nav.classList.remove('open');
-    menuButton.setAttribute('aria-expanded', 'false');
-    menuButton.setAttribute('aria-label', 'باز کردن منو');
-  }
+  menuButton.addEventListener("click", () => {
 
-  /* تابع مرکزی برای باز/بسته کردن */
-  function toggleMenu() {
-    const open = nav.classList.toggle('open');
+    const isOpen = nav.classList.toggle("open");
 
-    menuButton.setAttribute('aria-expanded', String(open));
     menuButton.setAttribute(
-      'aria-label',
-      open ? 'بستن منو' : 'باز کردن منو'
+      "aria-expanded",
+      String(isOpen)
     );
-  }
 
-  /* کلیک روی دکمه */
-  menuButton.addEventListener('click', (event) => {
-    event.stopPropagation();
-    toggleMenu();
+    menuButton.setAttribute(
+      "aria-label",
+      isOpen
+        ? "بستن منو"
+        : "باز کردن منو"
+    );
+
   });
 
-  /* کلیک روی لینک‌های منو → بستن */
-  nav.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', closeMenu);
+
+  nav.querySelectorAll("a").forEach((link) => {
+
+    link.addEventListener("click", () => {
+
+      nav.classList.remove("open");
+
+      menuButton.setAttribute(
+        "aria-expanded",
+        "false"
+      );
+
+      menuButton.setAttribute(
+        "aria-label",
+        "باز کردن منو"
+      );
+
+    });
+
   });
 
-  /* کلیک بیرون از منو → بستن */
-  document.addEventListener('click', (event) => {
-    if (!nav.classList.contains('open')) return;
-
-    const clickedInsideNav = nav.contains(event.target);
-    const clickedOnButton = menuButton.contains(event.target);
-
-    if (!clickedInsideNav && !clickedOnButton) {
-      closeMenu();
-    }
-  });
-
-  /* فشردن کلید Escape → بستن */
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && nav.classList.contains('open')) {
-      closeMenu();
-      menuButton.focus();
-    }
-  });
-
-  /* تغییر اندازه به دسکتاپ → بستن منو */
-  const desktopQuery = window.matchMedia('(min-width: 768px)');
-
-  desktopQuery.addEventListener('change', (event) => {
-    if (event.matches && nav.classList.contains('open')) {
-      closeMenu();
-    }
-  });
 }
 
 
-/* =========================
-   Dark / Light Mode
-========================= */
+/* =========================================
+   DARK / LIGHT MODE
+========================================= */
 
-const themeToggle = document.querySelector('.theme-toggle');
-const themeLabel = document.querySelector('.theme-toggle-label');
+const themeToggle =
+  document.querySelector(".theme-toggle");
 
-function getSavedTheme() {
-  try {
-    return localStorage.getItem('taisely-theme');
-  } catch (error) {
-    return null;
-  }
-}
+const root =
+  document.documentElement;
 
-function saveTheme(theme) {
-  try {
-    localStorage.setItem('taisely-theme', theme);
-  } catch (error) {
-    // اگر localStorage در دسترس نبود، سایت همچنان کار می‌کند.
-  }
-}
 
-function updateThemeButton() {
-  if (!themeToggle) return;
+function getDarkMode() {
 
-  const darkMode = document.documentElement.classList.contains('dark-mode');
-
-  themeToggle.setAttribute('aria-pressed', String(darkMode));
-
-  themeToggle.setAttribute(
-    'aria-label',
-    darkMode ? 'فعال کردن حالت روز' : 'فعال کردن حالت شب'
+  return root.classList.contains(
+    "dark-mode"
   );
 
-  if (themeLabel) {
-    /* ✅ اصلاح شد: کوتیشن جاافتاده اضافه شد */
-    themeLabel.textContent = darkMode ? 'روز' : 'شب';
+}
+
+
+function updateThemeButton() {
+
+  if (!themeToggle) {
+    return;
   }
+
+
+  const darkMode = getDarkMode();
+
+  const label =
+    themeToggle.querySelector(
+      ".theme-toggle-label"
+    );
+
+
+  if (darkMode) {
+
+    if (label) {
+      label.textContent = "روز";
+    }
+
+    themeToggle.setAttribute(
+      "aria-label",
+      "فعال کردن حالت روز"
+    );
+
+    themeToggle.setAttribute(
+      "title",
+      "حالت روز"
+    );
+
+    themeToggle.setAttribute(
+      "aria-pressed",
+      "true"
+    );
+
+  } else {
+
+    if (label) {
+      label.textContent = "شب";
+    }
+
+    themeToggle.setAttribute(
+      "aria-label",
+      "فعال کردن حالت شب"
+    );
+
+    themeToggle.setAttribute(
+      "title",
+      "حالت شب"
+    );
+
+    themeToggle.setAttribute(
+      "aria-pressed",
+      "false"
+    );
+
+  }
+
 }
-
-
-/* تم ذخیره‌شده را اعمال کن */
-const savedTheme = getSavedTheme();
-
-if (savedTheme === 'dark') {
-  document.documentElement.classList.add('dark-mode');
-} else {
-  document.documentElement.classList.remove('dark-mode');
-}
-
-updateThemeButton();
 
 
 if (themeToggle) {
-  themeToggle.addEventListener('click', () => {
-    const darkMode =
-      document.documentElement.classList.toggle('dark-mode');
 
-    saveTheme(darkMode ? 'dark' : 'light');
+  updateThemeButton();
 
-    updateThemeButton();
-  });
+
+  themeToggle.addEventListener(
+    "click",
+    () => {
+
+      const darkMode =
+        !getDarkMode();
+
+
+      root.classList.toggle(
+        "dark-mode",
+        darkMode
+      );
+
+
+      try {
+
+        localStorage.setItem(
+          "taisely-theme",
+          darkMode
+            ? "dark"
+            : "light"
+        );
+
+      } catch (error) {
+        // localStorage ممکن است توسط مرورگر مسدود شده باشد.
+      }
+
+
+      updateThemeButton();
+
+    }
+  );
+
 }
 
 
-/* =========================
-   Toast — Products
-========================= */
+/* =========================================
+   TOAST FOR COMING SOON
+========================================= */
 
-document.querySelectorAll('[data-soon]').forEach(button => {
-  button.addEventListener('click', () => {
+function showToast(message) {
 
-    /* حذف Toast قبلی اگر مانده */
-    document.querySelector('.toast')?.remove();
+  const existingToast =
+    document.querySelector(".toast");
 
-    const toast = document.createElement('div');
+  if (existingToast) {
+    existingToast.remove();
+  }
 
-    toast.className = 'toast';
 
-    /* ✅ پیام اختصاصی از data-soon، با fallback */
-    toast.textContent =
-      button.dataset.soon?.trim() ||
-      'این محصول فعلاً در حال آماده‌سازی است.';
+  const toast =
+    document.createElement("div");
 
-    /* ✅ نقش دسترس‌پذیری برای screen reader */
-    toast.setAttribute('role', 'status');
-    toast.setAttribute('aria-live', 'polite');
+  toast.className = "toast";
 
-    document.body.appendChild(toast);
+  toast.textContent = message;
 
-    const timer = setTimeout(() => {
-      toast.classList.add('toast--hide');
+  document.body.appendChild(toast);
 
-      toast.addEventListener('transitionend', () => {
-        toast.remove();
-      }, { once: true });
 
-      /* اگر transition اجرا نشد، fallback */
-      setTimeout(() => toast.remove(), 400);
+  setTimeout(() => {
 
-    }, 2200);
-
-    /* کلیک روی Toast → حذف فوری */
-    toast.addEventListener('click', () => {
-      clearTimeout(timer);
+    if (toast.parentNode) {
       toast.remove();
-    });
+    }
+
+  }, 2200);
+
+}
+
+
+document
+  .querySelectorAll("[data-soon]")
+  .forEach((button) => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        showToast(
+          "این محصول فعلاً در حال آماده‌سازی است."
+        );
+
+      }
+    );
+
   });
-});
 
 
-/* =========================
-   Search + Pagination
-========================= */
+/* =========================================
+   GENERIC PAGINATION + SEARCH
+========================================= */
 
 function setupCollection(options) {
+
   const {
     itemSelector,
     searchSelector,
+    filterSelector,
     paginationSelector,
     emptySelector,
-    filterSelector = null,
     perPage = 9
   } = options;
 
-  const items = Array.from(document.querySelectorAll(itemSelector));
-  const searchInput = document.querySelector(searchSelector);
-  const pagination = document.querySelector(paginationSelector);
-  const emptyState = document.querySelector(emptySelector);
+
+  const items =
+    Array.from(
+      document.querySelectorAll(
+        itemSelector
+      )
+    );
+
 
   if (!items.length) {
     return;
   }
 
-  let currentPage = 1;
-  let currentQuery = '';
-  let currentCategory = 'all';
 
-  const filters = filterSelector
-    ? Array.from(
-        document.querySelectorAll(
-          `${filterSelector} [data-category]`
+  const searchInput =
+    searchSelector
+      ? document.querySelector(
+          searchSelector
         )
-      )
-    : [];
+      : null;
+
+
+  const filterButtons =
+    filterSelector
+      ? Array.from(
+          document.querySelectorAll(
+            `${filterSelector} [data-category]`
+          )
+        )
+      : [];
+
+
+  const pagination =
+    paginationSelector
+      ? document.querySelector(
+          paginationSelector
+        )
+      : null;
+
+
+  const emptyState =
+    emptySelector
+      ? document.querySelector(
+          emptySelector
+        )
+      : null;
+
+
+  let currentPage = 1;
+
+  let activeCategory = "all";
+
+  let searchQuery = "";
 
 
   function getFilteredItems() {
-    return items.filter(item => {
-      const text = item.textContent.toLowerCase();
+
+    const normalizedQuery =
+      searchQuery
+        .trim()
+        .toLowerCase();
+
+
+    return items.filter((item) => {
 
       const category =
-        item.dataset.category || 'all';
+        item.dataset.category ||
+        "all";
 
-      const matchesSearch =
-        !currentQuery ||
-        text.includes(currentQuery);
 
       const matchesCategory =
-        currentCategory === 'all' ||
-        category === currentCategory;
+        activeCategory === "all" ||
+        category === activeCategory;
 
-      return matchesSearch && matchesCategory;
+
+      const text =
+        item.textContent
+          .toLowerCase();
+
+
+      const matchesSearch =
+        !normalizedQuery ||
+        text.includes(
+          normalizedQuery
+        );
+
+
+      return (
+        matchesCategory &&
+        matchesSearch
+      );
+
     });
+
   }
 
 
   function renderPagination(totalPages) {
-    if (!pagination) return;
 
-    pagination.innerHTML = '';
-
-    if (totalPages <= 1) {
-      pagination.hidden = true;
+    if (!pagination) {
       return;
     }
+
+
+    if (totalPages <= 1) {
+
+      pagination.innerHTML = "";
+
+      pagination.hidden = true;
+
+      return;
+
+    }
+
 
     pagination.hidden = false;
 
 
-    /* قبلی */
-
-    const previousButton = document.createElement('button');
-
-    previousButton.type = 'button';
-    previousButton.className = 'pagination-button';
-    previousButton.textContent = 'صفحه قبل';
-    previousButton.disabled = currentPage === 1;
-
-    previousButton.addEventListener('click', () => {
-      if (currentPage > 1) {
-        currentPage--;
-        render();
-        scrollToResults();
-      }
-    });
-
-    pagination.appendChild(previousButton);
+    let html = "";
 
 
-    /* شماره صفحات */
+    html += `
+      <button
+        type="button"
+        class="pagination-prev"
+        data-page="${currentPage - 1}"
+        ${currentPage === 1 ? "disabled" : ""}
+      >
+        صفحه قبل
+      </button>
+    `;
 
-    for (let page = 1; page <= totalPages; page++) {
-      const pageButton = document.createElement('button');
 
-      pageButton.type = 'button';
-      pageButton.className = 'pagination-button pagination-number';
-      pageButton.textContent = page;
+    for (
+      let page = 1;
+      page <= totalPages;
+      page++
+    ) {
 
-      if (page === currentPage) {
-        pageButton.classList.add('current');
-        pageButton.setAttribute('aria-current', 'page');
-      }
+      html += `
+        <button
+          type="button"
+          class="pagination-number ${
+            page === currentPage
+              ? "active"
+              : ""
+          }"
+          data-page="${page}"
+          ${
+            page === currentPage
+              ? 'aria-current="page"'
+              : ""
+          }
+        >
+          ${page}
+        </button>
+      `;
 
-      pageButton.addEventListener('click', () => {
-        currentPage = page;
-        render();
-        scrollToResults();
-      });
-
-      pagination.appendChild(pageButton);
     }
 
 
-    /* بعدی */
-
-    const nextButton = document.createElement('button');
-
-    nextButton.type = 'button';
-    nextButton.className = 'pagination-button';
-    nextButton.textContent = 'صفحه بعد';
-    nextButton.disabled = currentPage === totalPages;
-
-    nextButton.addEventListener('click', () => {
-      if (currentPage < totalPages) {
-        currentPage++;
-        render();
-        scrollToResults();
-      }
-    });
-
-    pagination.appendChild(nextButton);
-  }
+    html += `
+      <button
+        type="button"
+        class="pagination-next"
+        data-page="${currentPage + 1}"
+        ${
+          currentPage === totalPages
+            ? "disabled"
+            : ""
+        }
+      >
+        صفحه بعد
+      </button>
+    `;
 
 
-  /* ✅ اصلاح شد: اسکرول به اولین آیتم *قابل‌مشاهده* در صفحه فعلی */
-  function scrollToResults() {
-    const firstVisible = items.find(item => !item.hidden);
+    pagination.innerHTML = html;
 
-    if (firstVisible) {
-      firstVisible.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
+
+    pagination
+      .querySelectorAll("[data-page]")
+      .forEach((button) => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            if (
+              button.disabled
+            ) {
+              return;
+            }
+
+
+            const targetPage =
+              Number(
+                button.dataset.page
+              );
+
+
+            if (
+              !Number.isFinite(
+                targetPage
+              )
+            ) {
+              return;
+            }
+
+
+            currentPage =
+              targetPage;
+
+
+            render();
+
+
+            const target =
+              document.querySelector(
+                itemSelector
+              );
+
+
+            if (target) {
+
+              target.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+              });
+
+            }
+
+          }
+        );
+
       });
-    }
+
   }
 
 
   function render() {
-    const filteredItems = getFilteredItems();
 
-    const totalPages = Math.max(
-      1,
-      Math.ceil(filteredItems.length / perPage)
-    );
+    const filteredItems =
+      getFilteredItems();
 
 
-    if (currentPage > totalPages) {
-      currentPage = totalPages;
+    const totalPages =
+      Math.max(
+        1,
+        Math.ceil(
+          filteredItems.length /
+          perPage
+        )
+      );
+
+
+    if (
+      currentPage > totalPages
+    ) {
+
+      currentPage =
+        totalPages;
+
     }
 
 
-    /* ابتدا همه را مخفی کن */
+    items.forEach((item) => {
 
-    items.forEach(item => {
       item.hidden = true;
+
     });
 
 
-    /* فقط آیتم‌های صفحه فعلی را نمایش بده */
-
     const start =
-      (currentPage - 1) * perPage;
+      (currentPage - 1) *
+      perPage;
+
 
     const end =
       start + perPage;
 
+
     filteredItems
       .slice(start, end)
-      .forEach(item => {
+      .forEach((item) => {
+
         item.hidden = false;
+
       });
 
 
-    /* Empty state */
-
     if (emptyState) {
+
       emptyState.hidden =
         filteredItems.length !== 0;
+
     }
 
 
-    renderPagination(totalPages);
+    renderPagination(
+      totalPages
+    );
+
   }
 
-
-  /* =========================
-     Search
-  ========================= */
 
   if (searchInput) {
-    searchInput.addEventListener('input', event => {
-      currentQuery =
-        event.target.value
-          .trim()
-          .toLowerCase();
 
-      currentPage = 1;
+    searchInput.addEventListener(
+      "input",
+      () => {
 
-      render();
-    });
+        searchQuery =
+          searchInput.value;
+
+
+        currentPage = 1;
+
+        render();
+
+      }
+    );
+
   }
 
 
-  /* =========================
-     Filters
-  ========================= */
+  filterButtons.forEach(
+    (button) => {
 
-  filters.forEach(filter => {
-    filter.addEventListener('click', () => {
-      currentCategory =
-        filter.dataset.category || 'all';
+      button.addEventListener(
+        "click",
+        () => {
 
-      currentPage = 1;
+          activeCategory =
+            button.dataset.category ||
+            "all";
 
 
-      filters.forEach(button => {
-        button.classList.remove('active-tag');
-      });
+          filterButtons.forEach(
+            (otherButton) => {
 
-      filter.classList.add('active-tag');
+              otherButton.classList.toggle(
+                "active-tag",
+                otherButton === button
+              );
 
-      render();
-    });
-  });
+            }
+          );
+
+
+          currentPage = 1;
+
+          render();
+
+        }
+      );
+
+    }
+  );
 
 
   render();
+
 }
 
 
-/* =========================
-   Blog
-========================= */
+/* =========================================
+   BLOG
+========================================= */
 
 setupCollection({
-  itemSelector: '.blog-row',
-  searchSelector: '#blog-search',
-  paginationSelector: '#blog-pagination',
-  emptySelector: '#blog-empty',
-  filterSelector: '#blog-filters',
+
+  itemSelector: ".blog-row",
+
+  searchSelector: "#blog-search",
+
+  filterSelector: "#blog-filters",
+
+  paginationSelector: "#blog-pagination",
+
+  emptySelector: "#blog-empty",
+
   perPage: 9
+
 });
 
 
-/* =========================
-   Products
-========================= */
+/* =========================================
+   PRODUCTS
+========================================= */
 
 setupCollection({
-  itemSelector: '.product-card',
-  searchSelector: '#product-search',
-  paginationSelector: '#product-pagination',
-  emptySelector: '#product-empty',
+
+  itemSelector: ".product-card",
+
+  searchSelector: "#product-search",
+
+  filterSelector: null,
+
+  paginationSelector: "#product-pagination",
+
+  emptySelector: "#product-empty",
+
   perPage: 9
+
 });
