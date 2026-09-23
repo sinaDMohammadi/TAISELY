@@ -1,539 +1,387 @@
-document.addEventListener('DOMContentLoaded', () => {
+/* =========================
+   Mobile Menu
+========================= */
 
-  /* =========================
-     MOBILE MENU
-  ========================= */
+const menuButton = document.querySelector('.menu-toggle');
+const nav = document.querySelector('.main-nav');
 
-  const menuButton = document.querySelector('.menu-toggle');
-  const nav = document.querySelector('.main-nav');
+if (menuButton && nav) {
+  menuButton.addEventListener('click', () => {
+    const open = nav.classList.toggle('open');
 
-  if (menuButton && nav) {
-
-    menuButton.addEventListener('click', () => {
-      const open = nav.classList.toggle('open');
-
-      menuButton.setAttribute(
-        'aria-expanded',
-        String(open)
-      );
-    });
-
-    nav.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        nav.classList.remove('open');
-        menuButton.setAttribute('aria-expanded', 'false');
-      });
-    });
-  }
-
-
-  /* =========================
-     DARK / LIGHT MODE
-  ========================= */
-
-  const themeButton = document.querySelector('.theme-toggle');
-
-  const savedTheme = localStorage.getItem('taisely-theme');
-
-  if (savedTheme === 'dark') {
-    document.body.classList.add('dark-mode');
-  }
-
-  function updateThemeButton() {
-
-    if (!themeButton) {
-      return;
-    }
-
-    const dark = document.body.classList.contains('dark-mode');
-
-    themeButton.textContent = dark ? 'روز' : 'شب';
-
-    themeButton.setAttribute(
-      'title',
-      dark ? 'حالت روز' : 'حالت شب'
-    );
-
-    themeButton.setAttribute(
+    menuButton.setAttribute('aria-expanded', String(open));
+    menuButton.setAttribute(
       'aria-label',
-      dark ? 'فعال کردن حالت روز' : 'فعال کردن حالت شب'
+      open ? 'بستن منو' : 'باز کردن منو'
     );
-  }
-
-  updateThemeButton();
-
-  if (themeButton) {
-
-    themeButton.addEventListener('click', () => {
-
-      const dark = document.body.classList.toggle('dark-mode');
-
-      localStorage.setItem(
-        'taisely-theme',
-        dark ? 'dark' : 'light'
-      );
-
-      updateThemeButton();
-    });
-  }
-
-
-  /* =========================
-     COMING SOON BUTTONS
-  ========================= */
-
-  document.querySelectorAll('[data-soon]').forEach(button => {
-
-    button.addEventListener('click', () => {
-
-      const oldToast = document.querySelector('.toast');
-
-      if (oldToast) {
-        oldToast.remove();
-      }
-
-      const toast = document.createElement('div');
-
-      toast.className = 'toast';
-
-      toast.textContent =
-        'این محصول فعلاً در حال آماده‌سازی است.';
-
-      document.body.appendChild(toast);
-
-      setTimeout(() => {
-        toast.remove();
-      }, 2200);
-
-    });
-
   });
 
-
-  /* =========================
-     BLOG SEARCH + FILTER +
-     PAGINATION
-  ========================= */
-
-  const blogList = document.querySelector('#blog-list');
-
-  if (blogList) {
-
-    const blogItems = Array.from(
-      blogList.querySelectorAll('.blog-row')
-    );
-
-    const searchInput =
-      document.querySelector('#blog-search');
-
-    const categoryButtons =
-      document.querySelectorAll('[data-category]');
-
-    const pagination =
-      document.querySelector('#blog-pagination');
-
-    const resultsInfo =
-      document.querySelector('#blog-results-info');
-
-    const emptyState =
-      document.querySelector('#blog-empty');
-
-    const itemsPerPage = 9;
-
-    let currentCategory = 'ALL';
-    let currentPage = 1;
-
-    function normalizeText(value) {
-
-      return value
-        .toLowerCase()
-        .trim()
-        .replace(/ي/g, 'ی')
-        .replace(/ك/g, 'ک');
-    }
-
-    function getFilteredBlogItems() {
-
-      const searchTerm = searchInput
-        ? normalizeText(searchInput.value)
-        : '';
-
-      return blogItems.filter(item => {
-
-        const category =
-          item.dataset.category || '';
-
-        const searchableText =
-          normalizeText(
-            item.dataset.search ||
-            item.textContent
-          );
-
-        const categoryMatch =
-          currentCategory === 'ALL' ||
-          category === currentCategory;
-
-        const searchMatch =
-          !searchTerm ||
-          searchableText.includes(searchTerm);
-
-        return categoryMatch && searchMatch;
-      });
-    }
-
-    function renderBlog() {
-
-      const filteredItems =
-        getFilteredBlogItems();
-
-      const totalPages =
-        Math.max(
-          1,
-          Math.ceil(
-            filteredItems.length / itemsPerPage
-          )
-        );
-
-      if (currentPage > totalPages) {
-        currentPage = totalPages;
-      }
-
-      blogItems.forEach(item => {
-        item.style.display = 'none';
-      });
-
-      const start =
-        (currentPage - 1) * itemsPerPage;
-
-      const end =
-        start + itemsPerPage;
-
-      filteredItems
-        .slice(start, end)
-        .forEach(item => {
-          item.style.display = 'grid';
-        });
-
-      if (emptyState) {
-        emptyState.hidden =
-          filteredItems.length !== 0;
-      }
-
-      if (resultsInfo) {
-
-        if (filteredItems.length === 0) {
-          resultsInfo.textContent = '';
-        } else {
-          resultsInfo.textContent =
-            `${filteredItems.length} مطلب`;
-        }
-      }
-
-      renderPagination(
-        pagination,
-        totalPages,
-        currentPage,
-        page => {
-          currentPage = page;
-          renderBlog();
-
-          window.scrollTo({
-            top: blogList.offsetTop - 100,
-            behavior: 'smooth'
-          });
-        }
-      );
-    }
-
-    categoryButtons.forEach(button => {
-
-      button.addEventListener('click', () => {
-
-        currentCategory =
-          button.dataset.category || 'ALL';
-
-        currentPage = 1;
-
-        categoryButtons.forEach(btn => {
-          btn.classList.remove('active-tag');
-        });
-
-        button.classList.add('active-tag');
-
-        renderBlog();
-      });
-
+  nav.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      nav.classList.remove('open');
+      menuButton.setAttribute('aria-expanded', 'false');
+      menuButton.setAttribute('aria-label', 'باز کردن منو');
     });
+  });
+}
 
-    if (searchInput) {
 
-      searchInput.addEventListener(
-        'input',
-        () => {
-          currentPage = 1;
-          renderBlog();
-        }
-      );
+/* =========================
+   Dark / Light Mode
+========================= */
+
+const themeToggle = document.querySelector('.theme-toggle');
+const themeLabel = document.querySelector('.theme-toggle-label');
+
+function getSavedTheme() {
+  try {
+    return localStorage.getItem('taisely-theme');
+  } catch (error) {
+    return null;
+  }
+}
+
+function saveTheme(theme) {
+  try {
+    localStorage.setItem('taisely-theme', theme);
+  } catch (error) {
+    // اگر localStorage در دسترس نبود، سایت همچنان کار می‌کند.
+  }
+}
+
+function updateThemeButton() {
+  if (!themeToggle) return;
+
+  const darkMode = document.documentElement.classList.contains('dark-mode');
+
+  themeToggle.setAttribute('aria-pressed', String(darkMode));
+
+  themeToggle.setAttribute(
+    'aria-label',
+    darkMode ? 'فعال کردن حالت روز' : 'فعال کردن حالت شب'
+  );
+
+  if (themeLabel) {
+    themeLabel.textContent = darkMode ? 'روز' : 'شب';
+  }
+}
+
+
+/* تم ذخیره‌شده را اعمال کن */
+const savedTheme = getSavedTheme();
+
+if (savedTheme === 'dark') {
+  document.documentElement.classList.add('dark-mode');
+} else {
+  document.documentElement.classList.remove('dark-mode');
+}
+
+updateThemeButton();
+
+
+if (themeToggle) {
+  themeToggle.addEventListener('click', () => {
+    const darkMode =
+      document.documentElement.classList.toggle('dark-mode');
+
+    saveTheme(darkMode ? 'dark' : 'light');
+
+    updateThemeButton();
+  });
+}
+
+
+/* =========================
+   Toast — Products
+========================= */
+
+document.querySelectorAll('[data-soon]').forEach(button => {
+  button.addEventListener('click', () => {
+    const oldToast = document.querySelector('.toast');
+
+    if (oldToast) {
+      oldToast.remove();
     }
 
-    const params =
-      new URLSearchParams(window.location.search);
+    const toast = document.createElement('div');
 
-    const urlCategory =
-      params.get('category');
+    toast.className = 'toast';
+    toast.textContent = 'این محصول فعلاً در حال آماده‌سازی است.';
 
-    if (urlCategory) {
+    document.body.appendChild(toast);
 
-      const matchingButton =
-        document.querySelector(
-          `[data-category="${urlCategory.toUpperCase()}"]`
-        );
+    setTimeout(() => {
+      toast.remove();
+    }, 2200);
+  });
+});
 
-      if (matchingButton) {
 
-        currentCategory =
-          urlCategory.toUpperCase();
+/* =========================
+   Search + Pagination
+========================= */
 
-        categoryButtons.forEach(btn => {
-          btn.classList.remove('active-tag');
-        });
+function setupCollection(options) {
+  const {
+    itemSelector,
+    searchSelector,
+    paginationSelector,
+    emptySelector,
+    filterSelector = null,
+    perPage = 9
+  } = options;
 
-        matchingButton.classList.add('active-tag');
-      }
-    }
+  const items = Array.from(document.querySelectorAll(itemSelector));
+  const searchInput = document.querySelector(searchSelector);
+  const pagination = document.querySelector(paginationSelector);
+  const emptyState = document.querySelector(emptySelector);
 
-    renderBlog();
+  if (!items.length) {
+    return;
+  }
+
+  let currentPage = 1;
+  let currentQuery = '';
+  let currentCategory = 'all';
+
+  const filters = filterSelector
+    ? Array.from(
+        document.querySelectorAll(
+          `${filterSelector} [data-category]`
+        )
+      )
+    : [];
+
+
+  function getFilteredItems() {
+    return items.filter(item => {
+      const text = item.textContent.toLowerCase();
+
+      const category =
+        item.dataset.category || 'all';
+
+      const matchesSearch =
+        !currentQuery ||
+        text.includes(currentQuery);
+
+      const matchesCategory =
+        currentCategory === 'all' ||
+        category === currentCategory;
+
+      return matchesSearch && matchesCategory;
+    });
   }
 
 
-  /* =========================
-     PRODUCTS SEARCH +
-     PAGINATION
-  ========================= */
+  function renderPagination(totalPages) {
+    if (!pagination) return;
 
-  const productList =
-    document.querySelector('#product-list');
-
-  if (productList) {
-
-    const productItems =
-      Array.from(
-        productList.querySelectorAll('.product-card')
-      );
-
-    const searchInput =
-      document.querySelector('#product-search');
-
-    const pagination =
-      document.querySelector('#product-pagination');
-
-    const resultsInfo =
-      document.querySelector('#product-results-info');
-
-    const emptyState =
-      document.querySelector('#product-empty');
-
-    const itemsPerPage = 9;
-
-    let currentPage = 1;
-
-    function normalizeText(value) {
-
-      return value
-        .toLowerCase()
-        .trim()
-        .replace(/ي/g, 'ی')
-        .replace(/ك/g, 'ک');
-    }
-
-    function getFilteredProducts() {
-
-      const searchTerm = searchInput
-        ? normalizeText(searchInput.value)
-        : '';
-
-      return productItems.filter(item => {
-
-        const searchableText =
-          normalizeText(
-            item.dataset.search ||
-            item.textContent
-          );
-
-        return (
-          !searchTerm ||
-          searchableText.includes(searchTerm)
-        );
-      });
-    }
-
-    function renderProducts() {
-
-      const filteredProducts =
-        getFilteredProducts();
-
-      const totalPages =
-        Math.max(
-          1,
-          Math.ceil(
-            filteredProducts.length / itemsPerPage
-          )
-        );
-
-      if (currentPage > totalPages) {
-        currentPage = totalPages;
-      }
-
-      productItems.forEach(item => {
-        item.style.display = 'none';
-      });
-
-      const start =
-        (currentPage - 1) * itemsPerPage;
-
-      const end =
-        start + itemsPerPage;
-
-      filteredProducts
-        .slice(start, end)
-        .forEach(item => {
-          item.style.display = 'flex';
-        });
-
-      if (emptyState) {
-        emptyState.hidden =
-          filteredProducts.length !== 0;
-      }
-
-      if (resultsInfo) {
-
-        if (filteredProducts.length === 0) {
-          resultsInfo.textContent = '';
-        } else {
-          resultsInfo.textContent =
-            `${filteredProducts.length} محصول`;
-        }
-      }
-
-      renderPagination(
-        pagination,
-        totalPages,
-        currentPage,
-        page => {
-          currentPage = page;
-          renderProducts();
-
-          window.scrollTo({
-            top: productList.offsetTop - 100,
-            behavior: 'smooth'
-          });
-        }
-      );
-    }
-
-    if (searchInput) {
-
-      searchInput.addEventListener(
-        'input',
-        () => {
-          currentPage = 1;
-          renderProducts();
-        }
-      );
-    }
-
-    renderProducts();
-  }
-
-
-  /* =========================
-     PAGINATION GENERATOR
-  ========================= */
-
-  function renderPagination(
-    container,
-    totalPages,
-    currentPage,
-    onPageChange
-  ) {
-
-    if (!container) {
-      return;
-    }
-
-    container.innerHTML = '';
+    pagination.innerHTML = '';
 
     /*
       اگر فقط یک صفحه وجود دارد،
-      Pagination نمایش داده نمی‌شود.
+      pagination را نشان نمی‌دهیم.
     */
-
     if (totalPages <= 1) {
-      container.style.display = 'none';
+      pagination.hidden = true;
       return;
     }
 
-    container.style.display = 'flex';
+    pagination.hidden = false;
 
-    const previous =
-      document.createElement('button');
 
-    previous.type = 'button';
-    previous.className = 'page-btn page-prev';
-    previous.textContent = 'قبلی ←';
-    previous.disabled = currentPage === 1;
+    /* قبلی */
 
-    previous.addEventListener('click', () => {
+    const previousButton = document.createElement('button');
 
+    previousButton.type = 'button';
+    previousButton.className = 'pagination-button';
+    previousButton.textContent = 'صفحه قبل';
+    previousButton.disabled = currentPage === 1;
+
+    previousButton.addEventListener('click', () => {
       if (currentPage > 1) {
-        onPageChange(currentPage - 1);
+        currentPage--;
+        render();
+        scrollToResults();
       }
-
     });
 
-    container.appendChild(previous);
+    pagination.appendChild(previousButton);
 
+
+    /* شماره صفحات */
 
     for (let page = 1; page <= totalPages; page++) {
+      const pageButton = document.createElement('button');
 
-      const button =
-        document.createElement('button');
-
-      button.type = 'button';
-      button.className = 'page-btn';
+      pageButton.type = 'button';
+      pageButton.className = 'pagination-button pagination-number';
+      pageButton.textContent = page;
 
       if (page === currentPage) {
-        button.classList.add('current-page');
+        pageButton.classList.add('current');
+        pageButton.setAttribute('aria-current', 'page');
       }
 
-      button.textContent = page;
-
-      button.addEventListener('click', () => {
-        onPageChange(page);
+      pageButton.addEventListener('click', () => {
+        currentPage = page;
+        render();
+        scrollToResults();
       });
 
-      container.appendChild(button);
+      pagination.appendChild(pageButton);
     }
 
 
-    const next =
-      document.createElement('button');
+    /* بعدی */
 
-    next.type = 'button';
-    next.className = 'page-btn page-next';
-    next.textContent = 'بعدی →';
-    next.disabled =
-      currentPage === totalPages;
+    const nextButton = document.createElement('button');
 
-    next.addEventListener('click', () => {
+    nextButton.type = 'button';
+    nextButton.className = 'pagination-button';
+    nextButton.textContent = 'صفحه بعد';
+    nextButton.disabled = currentPage === totalPages;
 
+    nextButton.addEventListener('click', () => {
       if (currentPage < totalPages) {
-        onPageChange(currentPage + 1);
+        currentPage++;
+        render();
+        scrollToResults();
       }
-
     });
 
-    container.appendChild(next);
+    pagination.appendChild(nextButton);
   }
 
+
+  function scrollToResults() {
+    const firstItem = document.querySelector(itemSelector);
+
+    if (firstItem) {
+      firstItem.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  }
+
+
+  function render() {
+    const filteredItems = getFilteredItems();
+
+    const totalPages = Math.max(
+      1,
+      Math.ceil(filteredItems.length / perPage)
+    );
+
+
+    if (currentPage > totalPages) {
+      currentPage = totalPages;
+    }
+
+
+    /* ابتدا همه را مخفی کن */
+
+    items.forEach(item => {
+      item.hidden = true;
+    });
+
+
+    /* فقط آیتم‌های صفحه فعلی را نمایش بده */
+
+    const start =
+      (currentPage - 1) * perPage;
+
+    const end =
+      start + perPage;
+
+    filteredItems
+      .slice(start, end)
+      .forEach(item => {
+        item.hidden = false;
+      });
+
+
+    /* Empty state */
+
+    if (emptyState) {
+      emptyState.hidden =
+        filteredItems.length !== 0;
+    }
+
+
+    renderPagination(totalPages);
+  }
+
+
+  /* =========================
+     Search
+  ========================= */
+
+  if (searchInput) {
+    searchInput.addEventListener('input', event => {
+      currentQuery =
+        event.target.value
+          .trim()
+          .toLowerCase();
+
+      currentPage = 1;
+
+      render();
+    });
+  }
+
+
+  /* =========================
+     Filters
+  ========================= */
+
+  filters.forEach(filter => {
+    filter.addEventListener('click', () => {
+      currentCategory =
+        filter.dataset.category || 'all';
+
+      currentPage = 1;
+
+
+      filters.forEach(button => {
+        button.classList.remove('active-tag');
+      });
+
+      filter.classList.add('active-tag');
+
+      render();
+    });
+  });
+
+
+  render();
+}
+
+
+/* =========================
+   Blog
+========================= */
+
+setupCollection({
+  itemSelector: '.blog-row',
+  searchSelector: '#blog-search',
+  paginationSelector: '#blog-pagination',
+  emptySelector: '#blog-empty',
+  filterSelector: '#blog-filters',
+  perPage: 9
+});
+
+
+/* =========================
+   Products
+========================= */
+
+setupCollection({
+  itemSelector: '.product-card',
+  searchSelector: '#product-search',
+  paginationSelector: '#product-pagination',
+  emptySelector: '#product-empty',
+  perPage: 9
 });
