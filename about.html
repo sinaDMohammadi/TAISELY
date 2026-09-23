@@ -19,18 +19,31 @@
       <span>TAISELY</span>
     </a>
 
-    <button
-      class="menu-toggle"
-      aria-label="باز کردن منو"
-      aria-expanded="false"
-      aria-controls="main-menu"
-    >
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
+    <div class="header-actions">
 
-    <nav id="main-menu" class="main-nav">
+      <button
+        class="theme-toggle"
+        type="button"
+        aria-label="تغییر حالت نمایش"
+        title="حالت شب"
+      >
+        شب
+      </button>
+
+      <button
+        class="menu-toggle"
+        aria-label="باز کردن منو"
+        aria-expanded="false"
+        aria-controls="main-menu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+    </div>
+
+    <nav id="main-menu" class="main-nav" aria-label="منوی اصلی">
       <a href="index.html">خانه</a>
       <a class="active" href="about.html">درباره ما</a>
       <a href="blog.html">وبلاگ</a>
@@ -45,12 +58,16 @@
 
   <section class="page-hero">
     <div class="container narrow">
+
       <p class="eyebrow">ABOUT TAISELY</p>
+
       <h1>TAISELY برای چیست؟</h1>
+
       <p>
         یک رسانه مستقل برای کسانی که می‌خواهند فناوری را بفهمند،
         نه فقط خبرهایش را ببینند.
       </p>
+
     </div>
   </section>
 
@@ -63,6 +80,7 @@
       </div>
 
       <div class="prose">
+
         <p>
           در TAISELY قرار است موضوعات هوش مصنوعی، فناوری، علم،
           انرژی و آینده را به زبانی روشن و قابل استفاده بررسی کنیم.
@@ -77,6 +95,7 @@
           این صفحه و متن‌های فعلی نسخه اولیه سایت هستند و می‌توانند
           بعداً با داستان، تیم و اطلاعات واقعی پروژه تکمیل شوند.
         </p>
+
       </div>
 
     </div>
@@ -134,13 +153,42 @@
 </main>
 
 <footer class="site-footer">
-  <div class="container footer-bottom standalone">
-    <span>© 2026 TAISELY</span>
-    <a href="index.html">بازگشت به خانه ←</a>
+
+  <div class="container footer-grid">
+
+    <div>
+      <div class="footer-brand">TAISELY</div>
+      <p>
+        فناوری، هوش مصنوعی و آینده؛ ساده، روشن و کنجکاوانه.
+      </p>
+    </div>
+
+    <div>
+      <h4>صفحات</h4>
+      <a href="index.html">خانه</a>
+      <a href="blog.html">وبلاگ</a>
+      <a href="products.html">محصولات</a>
+      <a href="contact.html">تماس با ما</a>
+    </div>
+
+    <div>
+      <h4>موضوعات</h4>
+      <a href="blog.html?category=AI">AI</a>
+      <a href="blog.html?category=TECH">Technology</a>
+      <a href="blog.html?category=SCIENCE">Science</a>
+      <a href="blog.html?category=ENERGY">Energy</a>
+    </div>
+
   </div>
+
+  <div class="container footer-bottom">
+    <span>© 2026 TAISELY</span>
+    <span>Made for curious minds.</span>
+  </div>
+
 </footer>
 
 <script src="script.js"></script>
 
 </body>
-      </html>
+  </html>
