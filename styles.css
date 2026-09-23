@@ -501,6 +501,7 @@ html.dark-mode .theme-toggle-icon {
 ========================= */
 
 .hero-card {
+.hero-card {
   direction: rtl;
 
   background: #111111;
@@ -511,7 +512,7 @@ html.dark-mode .theme-toggle-icon {
 
   padding: 28px;
 
-  /* ✅ سایه نرم و مدرن به‌جای سایه سخت قبلی */
+  /* ✅ سایه نرم */
   box-shadow: var(--shadow-soft);
 
   min-height: 390px;
@@ -522,7 +523,6 @@ html.dark-mode .theme-toggle-icon {
 
   justify-content: space-between;
 
-  /* ✅ transition نرم */
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
@@ -532,10 +532,25 @@ html.dark-mode .theme-toggle-icon {
 .hero-card:hover {
   transform: translateY(-4px);
 
+  /* ✅ سایه hover کمی قوی‌تر ولی هنوز نرم */
   box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.05),
-    0 12px 32px rgba(0, 0, 0, 0.1),
-    0 32px 64px rgba(0, 0, 0, 0.08);
+    0 4px 8px rgba(0, 0, 0, 0.05),
+    0 16px 40px rgba(0, 0, 0, 0.1);
+}
+
+
+/* ✅ جداسازی در حالت شب با حلقه نازک */
+html.dark-mode .hero-card {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+
+html.dark-mode .hero-card:hover {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 16px 48px rgba(0, 0, 0, 0.6);
 }
 
 
