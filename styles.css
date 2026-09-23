@@ -13,6 +13,12 @@
   --input-bg: #ffffff;
   --shadow: rgba(0, 0, 0, 0.1);
 
+  /* ✅ سایه نرم و مدرن برای کارت‌ها */
+  --shadow-soft:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 4px 12px rgba(0, 0, 0, 0.05),
+    0 16px 40px rgba(0, 0, 0, 0.06);
+
   --radius: 24px;
   --max: 1180px;
 }
@@ -29,6 +35,11 @@ html.dark-mode {
   --header-text: #d0d0d0;
   --input-bg: #181818;
   --shadow: rgba(0, 0, 0, 0.35);
+
+  /* ✅ سایه ملایم‌تر برای حالت شب */
+  --shadow-soft:
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 8px 24px rgba(0, 0, 0, 0.4);
 
   color-scheme: dark;
 }
@@ -201,34 +212,81 @@ button {
 }
 
 
+/* =========================
+   ✅ آیکون دکمه تم — بازنویسی کامل
+   - در حالت روز: آیکون ماه (مقصد = شب)
+   - در حالت شب: آیکون خورشید (مقصد = روز)
+========================= */
+
 .theme-toggle-icon {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
 
-  border-radius: 50%;
-
-  background: currentColor;
+  display: inline-block;
 
   position: relative;
 
-  display: block;
+  flex-shrink: 0;
+
+  /* رنگ از currentColor گرفته می‌شود */
 }
 
 
+/* آیکون ماه (پیش‌فرض در حالت روز) */
+.theme-toggle-icon::before,
 .theme-toggle-icon::after {
   content: "";
 
   position: absolute;
 
+  border-radius: 50%;
+
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+/* دایره اصلی */
+.theme-toggle-icon::before {
   width: 16px;
   height: 16px;
 
-  top: -4px;
-  left: 5px;
+  top: 1px;
+  left: 1px;
 
-  border-radius: 50%;
+  background: currentColor;
+}
+
+
+/* دایره‌ای که روی ماه را می‌پوشاند و هلال می‌سازد */
+.theme-toggle-icon::after {
+  width: 14px;
+  height: 14px;
+
+  top: -1px;
+  left: 6px;
 
   background: var(--card);
+
+  /* ✅ در حالت روز: هلال ماه نشان داده می‌شود */
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+
+/* ✅ در حالت شب: تبدیل به خورشید (هلال حذف می‌شود) */
+html.dark-mode .theme-toggle-icon::after {
+  opacity: 0;
+  transform: scale(0.5) rotate(45deg);
+}
+
+
+/* اضافه کردن پرتوهای خورشید در حالت شب */
+html.dark-mode .theme-toggle-icon {
+  box-shadow:
+    0 0 0 2px var(--card),
+    0 0 0 4px currentColor;
 }
 
 
@@ -438,6 +496,10 @@ button {
 }
 
 
+/* =========================
+   ✅ کارت Hero — سایه اصلاح شد
+========================= */
+
 .hero-card {
   direction: rtl;
 
@@ -449,7 +511,8 @@ button {
 
   padding: 28px;
 
-  box-shadow: 20px 20px 0 var(--line);
+  /* ✅ سایه نرم و مدرن به‌جای سایه سخت قبلی */
+  box-shadow: var(--shadow-soft);
 
   min-height: 390px;
 
@@ -458,6 +521,29 @@ button {
   flex-direction: column;
 
   justify-content: space-between;
+
+  /* ✅ transition نرم */
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+
+.hero-card:hover {
+  transform: translateY(-4px);
+
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.05),
+    0 12px 32px rgba(0, 0, 0, 0.1),
+    0 32px 64px rgba(0, 0, 0, 0.08);
+}
+
+
+/* در حالت شب: سایه ملایم‌تر + هایلایت نازک */
+html.dark-mode .hero-card {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 12px 40px rgba(0, 0, 0, 0.5);
 }
 
 
@@ -599,7 +685,8 @@ button {
   transition:
     transform 0.25s ease,
     border-color 0.25s ease,
-    background-color 0.25s ease;
+    background-color 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 
@@ -612,6 +699,9 @@ button {
   transform: translateY(-5px);
 
   border-color: var(--ink);
+
+  /* ✅ سایه نرم در hover */
+  box-shadow: var(--shadow-soft);
 }
 
 
@@ -679,6 +769,9 @@ button {
   padding: 28px;
 
   margin-top: -1px;
+
+  /* ✅ سایه نرم */
+  box-shadow: var(--shadow-soft);
 }
 
 
@@ -1164,7 +1257,9 @@ button {
 }
 
 
-.pagination button.active {
+/* ✅ پشتیبانی از هم .active و هم .current */
+.pagination button.active,
+.pagination button.current {
   background: var(--ink);
 
   color: var(--bg);
@@ -1228,7 +1323,8 @@ button {
   transition:
     border-color 0.2s ease,
     transform 0.2s ease,
-    background-color 0.25s ease;
+    background-color 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 
@@ -1236,6 +1332,9 @@ button {
   transform: translateY(-4px);
 
   border-color: var(--ink);
+
+  /* ✅ سایه نرم در hover */
+  box-shadow: var(--shadow-soft);
 }
 
 
@@ -1350,8 +1449,23 @@ button {
     0 8px 30px
     rgba(0, 0, 0, 0.2);
 
+  /* ✅ transition برای انیمیشن خروج */
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+
   animation:
-    toast-in 0.2s ease;
+    toast-in 0.25s ease;
+}
+
+
+/* ✅ کلاس کمکی برای انیمیشن خروج (اگر در JS اضافه کنید) */
+.toast--hide {
+  opacity: 0;
+
+  transform: translateY(12px);
+
+  pointer-events: none;
 }
 
 
@@ -1455,16 +1569,22 @@ button {
 
 
   .theme-toggle-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+
+  .theme-toggle-icon::before {
     width: 14px;
     height: 14px;
   }
 
 
   .theme-toggle-icon::after {
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
 
-    left: 4px;
+    left: 5px;
   }
 
 
@@ -1605,37 +1725,4 @@ button {
   }
 
 
-  .hero-actions .btn {
-    flex: 1;
-  }
-
-
-  .content-tools {
-    align-items: stretch;
-  }
-
-
-  .search-box {
-    width: 100%;
-  }
-
-
-  .tag-row {
-    width: 100%;
-  }
-
-
-  .pagination {
-    gap: 6px;
-  }
-
-
-  .pagination button {
-    min-width: 38px;
-
-    height: 38px;
-
-    padding: 0 9px;
-  }
-
-     }
+  
