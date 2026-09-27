@@ -6,8 +6,8 @@
 
 const posts = [
   {
-    title: "ممنوعیت رسانه‌های اجتماعی برای کودکان ",
-    excerpt: " ممنوعیت رسانه‌های اجتماعی برای ایمن نگه داشتن کودکان کافی نیست ",
+    title: "ممنوعیت رسانه‌های اجتماعی برای کودکان",
+    excerpt: "ممنوعیت رسانه‌های اجتماعی برای ایمن نگه داشتن کودکان کافی نیست",
     category: "social media",
     date: "2026-09-27",
     icon: "fa-brands fa-instagram",
@@ -96,8 +96,52 @@ const pagination = document.getElementById("pagination");
 const sortSelect = document.getElementById("sortSelect");
 const themeToggle = document.getElementById("themeToggle");
 
+
+/* =========================
+   THEME
+========================= */
+
+function setTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  localStorage.setItem("taisely-theme", theme);
+
+  if (themeToggle) {
+    const icon = themeToggle.querySelector("i");
+
+    if (icon) {
+      icon.className =
+        theme === "dark"
+          ? "fa-solid fa-sun"
+          : "fa-solid fa-moon";
+    }
+  }
+}
+
+const savedTheme = localStorage.getItem("taisely-theme");
+const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+setTheme(savedTheme || (systemDark ? "dark" : "light"));
+
+if (themeToggle) {
+  themeToggle.addEventListener("click", () => {
+    const current = document.documentElement.dataset.theme;
+
+    setTheme(
+      current === "dark"
+        ? "light"
+        : "dark"
+    );
+  });
+}
+
+
+/* =========================
+   BLOG
+========================= */
+
 function formatDate(dateString) {
   const date = new Date(`${dateString}T00:00:00`);
+
   return new Intl.DateTimeFormat("fa-IR", {
     year: "numeric",
     month: "long",
@@ -109,68 +153,123 @@ function getSortedPosts() {
   return [...posts].sort((a, b) => {
     const first = new Date(a.date);
     const second = new Date(b.date);
-    return sortMode === "newest" ? second - first : first - second;
+
+    return sortMode === "newest"
+      ? second - first
+      : first - second;
   });
 }
 
 function renderPosts() {
+
+  // اگر صفحه Blog نیست، کاری انجام نده
+  if (!grid || !pagination) return;
+
   const sorted = getSortedPosts();
-  const totalPages = Math.max(1, Math.ceil(sorted.length / POSTS_PER_PAGE));
 
-  if (currentPage > totalPages) currentPage = totalPages;
+  const totalPages = Math.max(
+    1,
+    Math.ceil(sorted.length / POSTS_PER_PAGE)
+  );
 
-  const start = (currentPage - 1) * POSTS_PER_PAGE;
-  const pagePosts = sorted.slice(start, start + POSTS_PER_PAGE);
+  if (currentPage > totalPages) {
+    currentPage = totalPages;
+  }
+
+  const start =
+    (currentPage - 1) * POSTS_PER_PAGE;
+
+  const pagePosts =
+    sorted.slice(start, start + POSTS_PER_PAGE);
 
   grid.innerHTML = pagePosts.map(post => `
     <article class="post-card">
+
       <div class="post-image" aria-hidden="true">
-        <i class="fa-solid ${post.icon}"></i>
+        <i class="${post.icon}"></i>
       </div>
+
       <div class="post-body">
+
         <div class="post-meta">
-          <span class="post-category">${post.category}</span>
-          <time datetime="${post.date}">${formatDate(post.date)}</time>
+
+          <span class="post-category">
+            ${post.category}
+          </span>
+
+          <time datetime="${post.date}">
+            ${formatDate(post.date)}
+          </time>
+
         </div>
-        <h3 class="post-title">${post.title}</h3>
-        <p class="post-excerpt">${post.excerpt}</p>
+
+        <h3 class="post-title">
+          ${post.title}
+        </h3>
+
+        <p class="post-excerpt">
+          ${post.excerpt}
+        </p>
+
         <a class="read-more" href="${post.url}">
           ادامه مطلب
           <i class="fa-solid fa-arrow-left"></i>
         </a>
+
       </div>
+
     </article>
   `).join("");
 
   renderPagination(totalPages);
 
   if (pagePosts.length === 0) {
-    grid.innerHTML = `<p class="post-excerpt">هنوز مطلبی برای نمایش وجود ندارد.</p>`;
+    grid.innerHTML = `
+      <p class="post-excerpt">
+        هنوز مطلبی برای نمایش وجود ندارد.
+      </p>
+    `;
   }
 }
 
+
 function renderPagination(totalPages) {
+
+  if (!pagination) return;
+
   if (totalPages <= 1) {
     pagination.innerHTML = "";
     return;
   }
 
   let html = `
-    <button class="page-btn" data-page="${currentPage - 1}" ${currentPage === 1 ? "disabled" : ""}>
+    <button
+      class="page-btn"
+      data-page="${currentPage - 1}"
+      ${currentPage === 1 ? "disabled" : ""}
+    >
       <i class="fa-solid fa-chevron-right"></i>
     </button>
   `;
 
   for (let page = 1; page <= totalPages; page++) {
+
     html += `
-      <button class="page-btn ${page === currentPage ? "active" : ""}" data-page="${page}">
+      <button
+        class="page-btn ${page === currentPage ? "active" : ""}"
+        data-page="${page}"
+      >
         ${page}
       </button>
     `;
   }
 
   html += `
-    <button class="page-btn" data-page="${currentPage + 1}" ${currentPage === totalPages ? "disabled" : ""}>
+    <button
+      class="page-btn"
+      data-page="${currentPage + 1}"
+      ${currentPage === totalPages ? "disabled" : ""}
+    >
       <i class="fa-solid fa-chevron-left"></i>
     </button>
   `;
@@ -178,38 +277,74 @@ function renderPagination(totalPages) {
   pagination.innerHTML = html;
 }
 
-pagination.addEventListener("click", event => {
-  const button = event.target.closest("[data-page]");
-  if (!button || button.disabled) return;
 
-  currentPage = Number(button.dataset.page);
-  renderPosts();
-  document.getElementById("blog").scrollIntoView({ behavior: "smooth", block: "start" });
-});
+/* =========================
+   PAGINATION
+========================= */
 
-sortSelect.addEventListener("change", event => {
-  sortMode = event.target.value;
-  currentPage = 1;
-  renderPosts();
-});
+if (pagination) {
 
-function setTheme(theme) {
-  document.documentElement.dataset.theme = theme;
-  localStorage.setItem("taisely-theme", theme);
+  pagination.addEventListener("click", event => {
 
-  const icon = themeToggle.querySelector("i");
-  icon.className = theme === "dark" ? "fa-solid fa-sun" : "fa-solid fa-moon";
+    const button =
+      event.target.closest("[data-page]");
+
+    if (!button || button.disabled) return;
+
+    currentPage =
+      Number(button.dataset.page);
+
+    renderPosts();
+
+    const blog =
+      document.getElementById("blog");
+
+    if (blog) {
+      blog.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+
+  });
+
 }
 
-const savedTheme = localStorage.getItem("taisely-theme");
-const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-setTheme(savedTheme || (systemDark ? "dark" : "light"));
 
-themeToggle.addEventListener("click", () => {
-  const current = document.documentElement.dataset.theme;
-  setTheme(current === "dark" ? "light" : "dark");
-});
+/* =========================
+   SORT
+========================= */
 
-document.getElementById("year").textContent = new Date().getFullYear();
+if (sortSelect) {
+
+  sortSelect.addEventListener("change", event => {
+
+    sortMode = event.target.value;
+
+    currentPage = 1;
+
+    renderPosts();
+
+  });
+
+}
+
+
+/* =========================
+   FOOTER YEAR
+========================= */
+
+const yearElement =
+  document.getElementById("year");
+
+if (yearElement) {
+  yearElement.textContent =
+    new Date().getFullYear();
+}
+
+
+/* =========================
+   INITIAL RENDER
+========================= */
 
 renderPosts();
