@@ -6,10 +6,11 @@
 
 const posts = [
   {
-    title: "ممنوعیت رسانه‌های اجتماعی برای ایمن نگه داشتن کودکان کافی نیست",
+    title: "ممنوعیت رسانه‌های اجتماعی برای کودکان ",
+    excerpt: " ممنوعیت رسانه‌های اجتماعی برای ایمن نگه داشتن کودکان کافی نیست ",
     category: "social media",
     date: "2026-09-27",
-    icon: "fa-kids",
+    icon: "fa-sosial",
     url: "social-media-kids.html"
   },
   {
