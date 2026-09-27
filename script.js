@@ -10,7 +10,7 @@ const posts = [
     excerpt: " ممنوعیت رسانه‌های اجتماعی برای ایمن نگه داشتن کودکان کافی نیست ",
     category: "social media",
     date: "2026-09-27",
-    icon: "fa-sosial",
+    icon: "fa-brands fa-instagram",
     url: "social-media-kids.html"
   },
   {
